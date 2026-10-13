@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlogCutter - Universal AI Prompt Saver Pro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="brand-icon">
+            <img src="icon48.png" alt="BlogCutter" class="brand-img">
+          </div>
+          <div>
+            <h1 class="logo-title">Blog<span>Cutter</span></h1>
+            <div class="logo-sub">Prompt Saver Pro</div>
+          </div>
+        </div>
+
+        <div class="header-badges">
+          <!-- Active AI Page Detector Pill -->
+          <div id="ai-detected-pill" class="ai-detector-pill" title="Target AI Platform">
+            <span id="ai-pill-dot" class="ai-dot"></span>
+            <span id="ai-detected-name">Universal AI</span>
+          </div>
+
+          <!-- Connection Status Badge -->
+          <div id="connection-badge" class="badge badge-offline" title="BlogCutter Cloud Status">
+            <span class="badge-dot"></span>
+            <span id="badge-text">Local Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Navigation Toolbar -->
+      <nav class="nav-toolbar">
+        <button id="nav-new-btn" class="nav-btn primary-nav-btn" title="Create New Prompt (Ctrl+N)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <span>New</span>
+        </button>
+        <button id="nav-capture-btn" class="nav-btn" title="Capture text currently typed in active AI tab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Capture</span>
+        </button>
+        <button id="nav-sidepanel-btn" class="nav-btn" title="Open in Chrome Side Panel">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          <span>Side Panel</span>
+        </button>
+        <button id="nav-import-btn" class="nav-btn" title="Import / Export Prompts">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Sync / Backup</span>
+        </button>
+        <button id="nav-settings-btn" class="nav-btn" title="BlogCutter.com API Settings">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Cloud</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Global Toast Banner -->
+    <div id="toast-banner" class="toast hidden"></div>
+
+    <!-- Panel 1: Create / Edit Prompt Form -->
+    <section id="form-panel" class="panel hidden">
+      <div class="panel-header">
+        <h3 id="form-title">Create New Prompt</h3>
+        <button id="close-form-btn" class="close-btn" title="Close">&times;</button>
+      </div>
+      <div class="form-body">
+        <input type="hidden" id="edit-id">
+        <input type="hidden" id="edit-server-id">
+
+        <div class="form-row">
+          <div class="form-col-flex">
+            <label for="prompt-title" class="form-label">Title / Label</label>
+            <input type="text" id="prompt-title" placeholder="e.g. Claude Coding Specialist, SEO Article Outline" maxlength="120">
+          </div>
+          <div class="form-col-auto">
+            <label for="prompt-category" class="form-label">Category</label>
+            <select id="prompt-category" class="form-select">
+              <option value="General">🧠 General</option>
+              <option value="SEO">🚀 SEO</option>
+              <option value="Coding">💻 Coding</option>
+              <option value="Writing">✍️ Writing</option>
+              <option value="Business">📊 Business</option>
+              <option value="Creative">🎨 Creative</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="prompt-content" class="form-label">
+          Prompt Content
+          <span class="label-hint">Tip: Use <code>{{topic}}</code> or <code>[topic]</code> for dynamic variables</span>
+        </label>
+        <textarea id="prompt-content" rows="6" placeholder="Act as a world-class AI expert in {{field}} and analyze {{topic}}..."></textarea>
+
+        <div class="form-footer">
+          <button id="save-prompt-btn" class="btn btn-primary">
+            <span class="btn-text">Save Prompt</span>
+          </button>
+          <button id="cancel-form-btn" class="btn btn-ghost">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 2: Fill Variables Modal -->
+    <section id="variables-panel" class="panel hidden">
+      <div class="panel-header">
+        <h3>Fill Prompt Variables</h3>
+        <button id="close-variables-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="variables-body">
+        <p class="panel-subtitle">Fill in the variables before inserting into <span id="var-target-ai">AI</span>:</p>
+        <div id="variables-inputs-container" class="variables-inputs"></div>
+        <div class="var-preview-box">
+          <label class="form-label">Compiled Preview</label>
+          <div id="var-compiled-preview" class="var-preview-text"></div>
+        </div>
+        <div class="form-footer mt-3">
+          <button id="insert-compiled-btn" class="btn btn-primary">
+            <span>⚡ Insert into AI</span>
+          </button>
+          <button id="copy-compiled-btn" class="btn btn-secondary">
+            <span>📋 Copy Filled</span>
+          </button>
+          <button id="insert-raw-btn" class="btn btn-ghost">Insert Raw</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 3: BlogCutter API Cloud Settings -->
+    <section id="settings-panel" class="panel hidden">
+      <div class="panel-header">
+        <h3>BlogCutter Cloud Settings</h3>
+        <button id="close-settings-btn" class="close-btn">&times;</button>
+      </div>
+
+      <div class="settings-body">
+        <!-- Connection & Verification Section -->
+        <div id="unverified-box" class="card-inner">
+          <div class="box-title">Connect with BlogCutter</div>
+          <p class="box-desc">Enter any email to sync prompts live across your devices. New users are automatically registered for free.</p>
+
+          <div class="input-row">
+            <input type="email" id="api-email-input" placeholder="your.email@gmail.com">
+            <button id="send-code-btn" class="btn btn-primary btn-sm">Send Code</button>
+            <button id="change-email-btn" class="btn btn-secondary btn-sm hidden" title="Change Email Address">Edit</button>
+          </div>
+
+          <div id="verify-code-row" class="mt-3 hidden">
+            <label class="form-label">Enter 6-digit Verification Code</label>
+            <div class="input-row">
+              <input type="text" id="api-code-input" placeholder="e.g. 123456" maxlength="10">
+              <button id="verify-code-btn" class="btn btn-accent btn-sm">Verify & Sync</button>
+            </div>
+            <p id="code-hint" class="hint-text mt-1"></p>
+          </div>
+        </div>
+
+        <!-- Verified Account State -->
+        <div id="verified-box" class="card-inner verified-card hidden">
+          <div class="verified-header">
+            <span class="status-indicator-dot"></span>
+            <div>
+              <div class="verified-user" id="verified-user-email">user@blogcutter.com</div>
+              <div class="verified-id" id="verified-user-id">User ID: --</div>
+            </div>
+          </div>
+          <div class="verified-actions mt-3">
+            <button id="sync-now-btn" class="btn btn-secondary btn-sm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/></svg>
+              Sync Now
+            </button>
+            <button id="disconnect-btn" class="btn btn-ghost-danger btn-sm">Disconnect</button>
+          </div>
+        </div>
+
+        <!-- Widget Settings -->
+        <div class="setting-group mt-3">
+          <label class="form-label">In-Page Floating Widget</label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="pref-floating-widget" checked>
+            <span>Show floating prompt button on AI websites (ChatGPT, Claude, Gemini, DeepSeek)</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 4: Import / Export Prompts -->
+    <section id="import-panel" class="panel hidden">
+      <div class="panel-header">
+        <h3>Sync, Backup & Import</h3>
+        <button id="close-import-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="import-body">
+        <label class="form-label">Paste JSON or Text Prompts</label>
+        <textarea id="import-text" rows="5" placeholder='[{"title":"My Prompt","content":"...","category":"SEO"}]'></textarea>
+
+        <div class="import-options">
+          <label class="checkbox-label">
+            <input type="checkbox" id="import-sync-live" checked>
+            <span>Also save imported prompts to BlogCutter Cloud</span>
+          </label>
+        </div>
+
+        <div class="btn-group mt-3">
+          <button id="execute-import-btn" class="btn btn-primary btn-sm">Import Prompts</button>
+          <button id="export-json-btn" class="btn btn-secondary btn-sm">Export JSON Backup</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Prompts View -->
+    <main class="main-content">
+      <!-- Search Bar -->
+      <div class="search-bar-wrap">
+        <div class="search-input-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search-input" placeholder="Search prompts or press / to filter...">
+          <button id="clear-search-btn" class="clear-btn hidden">&times;</button>
+        </div>
+
+        <div class="sort-selector-wrap">
+          <select id="sort-select" class="sort-select" title="Sort Prompts">
+            <option value="newest">Newest First</option>
+            <option value="most_used">Most Used</option>
+            <option value="favorites">⭐ Starred First</option>
+            <option value="alphabetical">A - Z</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Category Filter Chips -->
+      <div class="filter-chips-container" id="filter-chips">
+        <button class="chip active" data-cat="all">All</button>
+        <button class="chip" data-cat="starred">⭐ Starred</button>
+        <button class="chip" data-cat="SEO">🚀 SEO</button>
+        <button class="chip" data-cat="Coding">💻 Coding</button>
+        <button class="chip" data-cat="Writing">✍️ Writing</button>
+        <button class="chip" data-cat="Business">📊 Business</button>
+        <button class="chip" data-cat="Creative">🎨 Creative</button>
+        <button class="chip" data-cat="General">🧠 General</button>
+      </div>
+
+      <!-- Prompts Scroll List -->
+      <div id="prompt-list" class="prompt-list">
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <p class="empty-title">No prompts saved yet</p>
+          <p class="empty-desc">Click <strong>+ New</strong> or <strong>Capture</strong> above to save a prompt for Claude, ChatGPT, Gemini, or DeepSeek.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Status Bar -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span id="prompts-counter">0 prompts</span>
+      </div>
+      <div class="footer-right">
+        <span id="footer-sync-status">BlogCutter Cloud Ready</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
