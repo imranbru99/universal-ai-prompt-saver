@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const categorySelect = document.getElementById('prompt-category');
   const contentInput = document.getElementById('prompt-content');
   const savePromptBtn = document.getElementById('save-prompt-btn');
+  const promptCharCount = document.getElementById('prompt-char-count');
+  const promptVarCount = document.getElementById('prompt-var-count');
 
   // Variables Panel Elements
   const varTargetAi = document.getElementById('var-target-ai');
@@ -137,6 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderApiSettings();
     updateConnectionStatusUI();
     renderPrompts();
+    updatePromptMeta();
 
     // 4. Update badge
     try {
@@ -259,6 +262,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const firstLine = draftText.split('\n')[0].trim();
       titleInput.value = firstLine.length > 40 ? firstLine.substring(0, 37) + '...' : firstLine;
       contentInput.value = draftText;
+      updatePromptMeta();
       formTitle.textContent = `Captured from ${activeAi.name}`;
       formPanel.classList.remove('hidden');
       titleInput.focus();
@@ -639,6 +643,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     titleInput.value = prompt.title || '';
     categorySelect.value = prompt.category || 'General';
     contentInput.value = prompt.content || '';
+    updatePromptMeta();
     formTitle.textContent = 'Edit Prompt';
     formPanel.classList.remove('hidden');
     contentInput.focus();
@@ -650,6 +655,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     titleInput.value = '';
     categorySelect.value = 'General';
     contentInput.value = '';
+    updatePromptMeta();
     formTitle.textContent = 'Create New Prompt';
   }
 
@@ -675,6 +681,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       bracket.forEach(m => matches.add(m.slice(1, -1).trim()));
     }
     return Array.from(matches);
+  }
+
+  function updatePromptMeta() {
+    if (!contentInput || !promptCharCount) return;
+    const text = contentInput.value || '';
+    const charLen = text.length;
+    const wordLen = text.trim() ? text.trim().split(/\s+/).length : 0;
+    promptCharCount.textContent = `${charLen} character${charLen === 1 ? '' : 's'} · ${wordLen} word${wordLen === 1 ? '' : 's'}`;
+
+    if (promptVarCount) {
+      const vars = extractVariables(text);
+      if (vars.length > 0) {
+        promptVarCount.textContent = `${vars.length} variable${vars.length === 1 ? '' : 's'}`;
+        promptVarCount.title = `Detected: ${vars.join(', ')}`;
+        promptVarCount.classList.remove('hidden');
+        promptVarCount.classList.add('has-vars');
+      } else {
+        promptVarCount.classList.add('hidden');
+        promptVarCount.classList.remove('has-vars');
+      }
+    }
+  }
+
+  if (contentInput) {
+    contentInput.addEventListener('input', updatePromptMeta);
   }
 
   function showVariablesModal(prompt) {

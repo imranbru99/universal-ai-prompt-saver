@@ -92,11 +92,17 @@
           </div>
         </div>
 
-        <label for="prompt-content" class="form-label">
-          Prompt Content
-          <span class="label-hint">Tip: Use <code>{{topic}}</code> or <code>[topic]</code> for dynamic variables</span>
-        </label>
-        <textarea id="prompt-content" rows="6" placeholder="Act as a world-class AI expert in {{field}} and analyze {{topic}}..."></textarea>
+        <div class="prompt-textarea-wrapper">
+          <label for="prompt-content" class="form-label">
+            <span>Prompt Content</span>
+            <span class="label-hint">Tip: Use <code>{{topic}}</code> or <code>[topic]</code> for dynamic variables</span>
+          </label>
+          <textarea id="prompt-content" rows="10" placeholder="Act as a world-class AI expert in {{field}} and analyze {{topic}}..."></textarea>
+          <div class="prompt-meta-info" id="prompt-meta-info">
+            <span id="prompt-char-count">0 characters · 0 words</span>
+            <span id="prompt-var-count" class="var-badge-count hidden">0 variables</span>
+          </div>
+        </div>
 
         <div class="form-footer">
           <button id="save-prompt-btn" class="btn btn-primary">
